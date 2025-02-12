@@ -1,4 +1,4 @@
-package programmers.level1.stack;
+package programmers.stack.level1;
 
 import java.util.*;
 
