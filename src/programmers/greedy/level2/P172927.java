@@ -1,4 +1,4 @@
-package programmers.brute.level2;
+package programmers.greedy.level2;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,6 +6,7 @@ import java.util.List;
 
 class Solution {
 
+    // 각 객체는 다이아몬드 곡괭이, 철 곡괭이, 돌 곡괭이로 캤을 때의 피로도 값
     static class Mineral {
         private int diamond;
         private int iron;
@@ -43,7 +44,6 @@ class Solution {
                 diamond += pirodo[0][val];
                 iron += pirodo[1][val];
                 stone += pirodo[2][val];
-
             }
 
             group.add(new Mineral(diamond, iron, stone));
