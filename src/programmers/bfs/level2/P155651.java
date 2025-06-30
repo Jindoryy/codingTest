@@ -3,55 +3,49 @@ package programmers.bfs.level2;
 import java.util.*;
 
 class Solution {
+
     public int solution(String[][] book_time) {
 
-        Arrays.sort(book_time, new Comparator<String[]>() {
-            public int compare(String[] o1, String[] o2) {
-                return o1[0].compareTo(o2[0]);
-            }
-        });
+        // 객실의 개수
+        int roomCnt = 0;
+        // 예약 시간 리스트 (시작 순으로 정렬)
+        Arrays.sort(book_time, (o1, o2) -> o1[0].compareTo(o2[0]));
+        // 예약 우선순위 큐 (가장 빨리 끝나는 순으로 정렬)
+        PriorityQueue<int[]> pq = new PriorityQueue<>((o1, o2) -> o1[1] - o2[1]);
 
-        // 최대 객실 수
-        int max = 0;
-        // 예약 큐
-        Queue<int[]> queue = new LinkedList<>();
-
-        // 객실 수 구하기
         for (int i = 0; i < book_time.length; i++) {
-            // 현재 예약 시작 시간 (단위 : 분)
+
             String sHour = book_time[i][0].split(":")[0];
             String sMinute = book_time[i][0].split(":")[1];
             int sTotal = Integer.parseInt(sHour) * 60 + Integer.parseInt(sMinute);
-            // 현재 예약 종료 시간 (단위 : 분)
+
             String eHour = book_time[i][1].split(":")[0];
             String eMinute = book_time[i][1].split(":")[1];
             int eTotal = Integer.parseInt(eHour) * 60 + Integer.parseInt(eMinute) + 10;
 
-            // 예약 큐가 있다면
-            if (!queue.isEmpty()) {
-                int cnt = 0;
-                while (cnt < queue.size()) {
-                    int[] room = queue.poll();
-                    int start = room[0];
-                    int end = room[1];
-                    // 예약 큐의 끝나는 시간이 현재 예약 시작시간 보다 크면 (새로운 객실 할당해야 하면) 큐에 꺼낸 예약 집어넣기
-                    if (end > sTotal) {
-                        queue.add(new int[]{start, end});
-                    } else {
-                        break;
-                    }
-
-                    cnt += 1;
-                }
+            if (pq.isEmpty()) {
+                roomCnt += 1;
+                pq.add(new int[] {sTotal, eTotal});
+                continue;
             }
 
-            // 현재 예약 등록
-            queue.add(new int[]{sTotal, eTotal});
+            // 예약 우선순위 큐 중에 가장 빨리 끝나는 예약 반환
+            int[] prevTime = pq.poll();
 
-            max = Math.max(max, queue.size());
+            /**
+             * 현재 예약의 시작시간이 가장 빨리 끝나는 예약 종료시간보다 빠른 경우
+             * 큐에서 꺼낸 예약을 다시 넣고 객실의 개수 + 1
+             */
+            if (sTotal < prevTime[1]) {
+                pq.add(prevTime);
+                roomCnt += 1;
+            }
+
+            // 현재 예약은 무조건 큐에 넣음 (예약 리스트 비교를 위해서)
+            pq.add(new int[] {sTotal, eTotal});
         }
 
-        return max;
+        return roomCnt;
     }
 }
 
