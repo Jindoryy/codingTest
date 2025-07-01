@@ -4,17 +4,15 @@ import java.util.*;
 
 class Solution {
 
-    boolean[] visited;
-    Queue<Integer> q = new LinkedList<>();
+    static boolean[] visited;
+    static Queue<Integer> q = new LinkedList<>();
+    static int answer;
 
     public int solution(int n, int[][] computers) {
 
-        int answer = 0;
         visited = new boolean[n];
-
-        // 0부터 n-1까지 bfs 탐색
-        // 네트워크로 묶여있으면 묶고, 아니면 1개의 네트워크
         for (int i = 0; i < n; i++) {
+
             if (!visited[i]) {
                 visited[i] = true;
                 q.add(i);
@@ -26,13 +24,15 @@ class Solution {
         return answer;
     }
 
-    public void bfs(int[][] computers) {
+    private void bfs(int[][] computers) {
 
         while (!q.isEmpty()) {
-            int x = q.poll();
 
-            for(int j = 0; j < computers.length; j++) {
-                if (!visited[j] && computers[x][j] == 1) {
+            int v = q.poll();
+
+            for (int j = 0; j < computers.length; j++) {
+
+                if (!visited[j] && computers[v][j] == 1) {
                     visited[j] = true;
                     q.add(j);
                 }
