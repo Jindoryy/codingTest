@@ -1,32 +1,35 @@
 package programmers.binary.level2;
 
+import java.util.*;
+
 class Solution {
     public int solution(int[] diffs, int[] times, long limit) {
 
-        int lp = 1, rp = 100000;
         int answer = 0;
+        int lp = 1, rp = 100000;
 
         while (lp <= rp) {
 
-            long timeConsume = times[0]; // 소요시간
-            int mid = (lp + rp) / 2; // 숙련도
+            long consume = times[0]; // 소요되는 시간 (첫번째 퍼즐은 time_cur만큼의 시간만큼 사용해서 푼다고 가정)
+            int level = (lp + rp) / 2; // 숙련도
 
-            for (int i = 1 ; i < diffs.length ; i++) {
-                if (diffs[i] <= mid) {
-                    timeConsume += times[i];
+            for (int i = 1; i < diffs.length; i++) {
+
+                int diff = diffs[i]; // 난이도
+                if (diff <= level) { // 난이도 <= 숙련도
+                    consume += times[i];
                 }
                 else {
-                    int failCount = diffs[i] - mid;
-                    timeConsume += (times[i-1] + times[i]) * failCount + times[i];
+                    consume += (diff-level) * (times[i] + times[i-1]) + times[i];
                 }
             }
 
-            // 제한 시간 내에 가능하면 더 작은 숙련도 탐색 | 숙련도를 줄이면서 탐색하기 떄문에 이 부분에서 answer 업데이트
-            if (timeConsume <= limit) {
-                answer = mid;
-                rp = mid - 1;
-            } else {
-                lp = mid + 1;
+            if (consume <= limit) {
+                answer = level;
+                rp = level - 1;
+            }
+            else {
+                lp = level + 1;
             }
         }
 
