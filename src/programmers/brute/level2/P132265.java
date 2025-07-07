@@ -2,27 +2,37 @@ package programmers.brute.level2;
 
 class Solution {
     public int solution(int[] topping) {
+
         int answer = 0;
 
-        int[] cake1 = new int[10001];
-        int[] cake2 = new int[10001];
-        int n = topping.length;
-        int cake1_cnt = 0; // 토핑 종류
-        int cake2_cnt = 0; // 토핑 종류
+        int[] cake1 = new int[10000+1];
+        int[] cake2 = new int[10000+1];
+        int cake1Cnt = 0;
+        int cake2Cnt = 0;
 
-        for (int i = 0; i < n; i++) {
-            cake2[topping[i]] += 1;
-            if (cake2[topping[i]] == 1) cake2_cnt += 1;
+        for (int i = 0; i < topping.length; i++) {
+
+            int topp = topping[i];
+
+            // 우선 cake2에 전부 토핑이 있다고 가정
+            if (cake2[topp] == 0) cake2Cnt += 1;
+            cake2[topp] += 1;
         }
 
-        for (int i = 0; i < n; i++) {
-            cake1[topping[i]] += 1;
-            if (cake1[topping[i]] == 1) cake1_cnt += 1;
+        for (int i = 0; i < topping.length; i++) {
 
-            cake2[topping[i]] -= 1;
-            if (cake2[topping[i]] == 0) cake2_cnt -= 1;
+            int topp = topping[i];
 
-            if (cake1_cnt == cake2_cnt) answer += 1;
+            // 계속 자르면서 토핑의 개수 비교
+            if (cake1[topp] == 0) cake1Cnt += 1;
+            cake1[topp] += 1;
+
+            if (cake2[topp] == 1) cake2Cnt -= 1;
+            cake2[topp] -= 1;
+
+            if (cake1Cnt == cake2Cnt) {
+                answer += 1;
+            }
         }
 
         return answer;
